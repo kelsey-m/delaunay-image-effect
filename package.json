@@ -1,5 +1,5 @@
 {
-  "name": "DelaunayImageEffect",
+  "name": "delaunay-image-effect",
   "version": "0.1.0",
   "description": "image manipulation experiment using delaunay triangles",
   "main": "lib/delaunay-image-effect.js",
