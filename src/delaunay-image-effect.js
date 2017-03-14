@@ -28,14 +28,14 @@ class DelaunayImageEffect{
 
 	//--------------------------------- declareConstants
 	declareConstants(){
-		this.TRIANGLE_GROUP_POOL_SIZE 	= 30;
-		this.MOUSE_POINT_RADIUS 		= 50;
-		this.NUM_RANDOM_PTS 			= 300;
+		this.TRIANGLE_GROUP_POOL_SIZE	= 30;
+		this.MOUSE_POINT_RADIUS			= 50;
+		this.NUM_RANDOM_PTS				= 300;
 		//should be an even number
 		//as iterations will be split 
 		//evenly between scaling up 
 		//and scaling down 
-		this.NUM_ANIM_ITERATIONS 		= 16;
+		this.NUM_ANIM_ITERATIONS		= 16;
 	}
 
 	//--------------------------------- initVars
@@ -43,10 +43,9 @@ class DelaunayImageEffect{
 		// the index of the current image
 		// (so that we can add multiple images
 		// and swap them out on some user input)
-		this.cur_image_ind 				= -1;
+		this.cur_image_ind				= -1;
 		// the pool that holds the rasters
-		//this.triangleGroupPool 		= [];
-		this.triangleGroups				= [];
+		this.triangleGroups 			= [];
 		this.animatingTriangleGroups	= [];
 	}
 
