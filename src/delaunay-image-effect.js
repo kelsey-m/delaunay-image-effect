@@ -1,4 +1,5 @@
 import DelaunayTriangulate from "delaunay-triangulate";
+import paper from "paper";
 
 /* ------------------------------
 
