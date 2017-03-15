@@ -1,2 +1,6 @@
+#directories
 node_modules/
 lib/
+
+#files
+.DS_Store
