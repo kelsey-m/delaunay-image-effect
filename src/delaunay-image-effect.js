@@ -91,7 +91,7 @@ class DelaunayImageEffect{
 
     //--------------------------------- onImageLoaded
     onImageLoaded(){
-        if(this.onLoad) this.onLoad();
+        if(this.onLoaded) this.onLoaded();
         this.onResize();
 
         this.raster_width = this.raster.bounds.width;
