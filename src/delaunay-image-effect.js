@@ -48,6 +48,7 @@ class DelaunayImageEffect{
         // the pool that holds the rasters
         this.triangleGroups             = [];
         this.animatingTriangleGroups    = [];
+        this.onLoaded                   = null;
     }
 
     //params can be an array of strings or 
@@ -76,6 +77,13 @@ class DelaunayImageEffect{
         paper.view.onFrame = this.onFrame.bind(this);
     }
 
+    //--------------------------------- reset
+    reset(){
+        paper.project.activeLayer.removeChildren();
+        this.initVars();
+        this.init(this.onLoaded);
+    }
+
     //--------------------------------- loadNextImage
     loadNextImage(){
         this.cur_image_ind++;
@@ -92,40 +100,20 @@ class DelaunayImageEffect{
     //--------------------------------- onImageLoaded
     onImageLoaded(){
         if(this.onLoaded) this.onLoaded();
-        this.onResize();
 
-        this.raster_width = this.raster.bounds.width;
-        this.raster_height = this.raster.bounds.height;
-
-        /// create the delaunay triangles
-        // by generating random points
-        // that spread accross the width 
-        // of the stage
-        this.createTriangles();
-
-        //create the initial pool of groups 
-        //that will be contain with the triangles
-        //and rsaters that willl be clipped by the triangles
-        this.createTriangleGroups();
+        this.createTrianglesByViewSize();
     }
 
     //--------------------------------- onResize
     onResize(event){
-        var raster;
+        var self = this;
+        clearTimeout(this.resizeTimeout);
 
-        this.raster.fitBounds(paper.view.bounds, true);
-        this.raster.position = paper.view.center;
-        this.raster_width = this.raster.bounds.width;
-        this.raster_height = this.raster.bounds.height;
-
-        //want to fit bounds for all rasters
-        //and redraw the triangles
-        for(var i=0;i<this.triangleGroups.length; i++){
-            //pdate the 2nd child which will be the raster
-            raster = this.triangleGroups[i].group.children[1];
-            raster.fitBounds(paper.view.bounds, true);
-            raster.position = paper.view.center;
-        }
+        // set a timeout so that 
+        // resetting does not occur too rapidly
+        this.resizeTimeout = setTimeout(function(){
+            self.reset();
+        }, 500);
     }
 
     //--------------------------------- onFrame
@@ -141,6 +129,30 @@ class DelaunayImageEffect{
             //get the mouse point
             self.animateTrianglesAroundPoint(mouseEvent.point);
         }, 60);
+    }
+
+     //--------------------------------- createTrianglesByViewSize
+    createTrianglesByViewSize(){
+        this.setRasterToViewSize();
+
+        // create the delaunay triangles
+        // by generating random points
+        // that spread accross the width 
+        // of the stage
+        this.createTriangles();
+
+        //create the initial pool of groups 
+        //that will be contain with the triangles
+        //and rsaters that willl be clipped by the triangles
+        this.createTriangleGroups();
+    }
+
+    //--------------------------------- setRasterToViewSize
+    setRasterToViewSize(){
+        this.raster.fitBounds(paper.view.bounds, true);
+        this.raster.position = paper.view.center;
+        this.raster_width = this.raster.bounds.width;
+        this.raster_height = this.raster.bounds.height;
     }
 
     //--------------------------------- animateTriangles
@@ -306,6 +318,7 @@ class DelaunayImageEffect{
 
     //--------------------------------- createTriangleGroups
     createTriangleGroups(){
+        this.triangleGroups = [];
         //create the clipping group for
         var group;
 
