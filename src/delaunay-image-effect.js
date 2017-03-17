@@ -29,7 +29,6 @@ class DelaunayImageEffect{
 
     //--------------------------------- declareConstants
     declareConstants(){
-        this.TRIANGLE_GROUP_POOL_SIZE   = 30;
         this.MOUSE_POINT_RADIUS         = 50;
         this.NUM_RANDOM_PTS             = 300;
         //should be an even number
@@ -51,8 +50,8 @@ class DelaunayImageEffect{
         this.onLoaded                   = null;
     }
 
-    //params can be an array of strings or 
-    //a string representing the images or the image
+    /*  params can be an array of strings or 
+        string representing the images or the image  */
     //--------------------------------- constructor
     constructor(stage_element, images){
         //if string convert to array
@@ -67,13 +66,16 @@ class DelaunayImageEffect{
     }
 
     //--------------------------------- init 
-    init(onLoaded){
+    init(onLoaded, disableMouse){
+        //set disableMouse to false by default
+        disableMouse = !disableMouse ? false : true;
+        //store on loaded callback
         this.onLoaded = onLoaded;
         //begin to load the image(s)
         this.loadNextImage();
 
         paper.view.onResize = this.onResize.bind(this);
-        paper.view.onMouseMove = this.onMouseMove.bind(this);
+        if(!disableMouse) paper.view.onMouseMove = this.onMouseMove.bind(this);
         paper.view.onFrame = this.onFrame.bind(this);
     }
 
