@@ -1,6 +1,6 @@
 {
   "name": "delaunay-image-effect",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "image manipulation experiment using delaunay triangles",
   "main": "lib/delaunay-image-effect.js",
   "scripts": {
@@ -23,6 +23,6 @@
     "babel-preset-es2015": "^6.24.0"
   },
   "dependencies": {
-    "delaunay-triangulate": "^1.1.7"
+    "delaunay-triangulate": "^1.1.6"
   }
 }
