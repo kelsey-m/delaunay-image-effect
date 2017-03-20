@@ -68,22 +68,30 @@ class DelaunayImageEffect{
     //--------------------------------- init 
     init(onLoaded, disableMouse){
         //set disableMouse to false by default
-        disableMouse = !disableMouse ? false : true;
+        this.disableMouse = !disableMouse ? false : true;
         //store on loaded callback
         this.onLoaded = onLoaded;
         //begin to load the image(s)
         this.loadNextImage();
 
         paper.view.onResize = this.onResize.bind(this);
-        if(!disableMouse) paper.view.onMouseMove = this.onMouseMove.bind(this);
+        if(!this.disableMouse) paper.view.onMouseMove = this.onMouseMove.bind(this);
         paper.view.onFrame = this.onFrame.bind(this);
     }
 
     //--------------------------------- reset
     reset(){
-        paper.project.activeLayer.removeChildren();
-        this.initVars();
-        this.init(this.onLoaded);
+        var self = this;
+        this.raster.onLoad = null;
+        //paper.project.activeLayer.removeChildren();
+        paper.project.clear();
+        paper.view.draw();
+        clearTimeout(this.resetTimeout);
+
+       this.resetTimeout = setTimeout(function(){
+            self.initVars();
+            self.loadNextImage();
+       }, 100);
     }
 
     //--------------------------------- loadNextImage
@@ -96,7 +104,7 @@ class DelaunayImageEffect{
     //--------------------------------- loadImage
     loadImage(ind){
         this.raster = new paper.Raster(this.images[ind]);
-        this.raster.on("load", this.onImageLoaded.bind(this));
+        this.raster.onLoad = this.onImageLoaded.bind(this);
     }
 
     //--------------------------------- onImageLoaded
@@ -110,7 +118,6 @@ class DelaunayImageEffect{
     onResize(event){
         var self = this;
         clearTimeout(this.resizeTimeout);
-
         // set a timeout so that 
         // resetting does not occur too rapidly
         this.resizeTimeout = setTimeout(function(){
@@ -193,7 +200,8 @@ class DelaunayImageEffect{
                 scale = ( scale_factor*this.animatingTriangleGroups[i].iteration ) + 1;
             else  
                 scale = this.animatingTriangleGroups[i].max_scale - 
-                        ( scale_factor*(this.animatingTriangleGroups[i].iteration-(this.NUM_ANIM_ITERATIONS/2)) );
+                        ( scale_factor*(this.animatingTriangleGroups[i].iteration
+                        - (this.NUM_ANIM_ITERATIONS/2)) );
 
             this.animatingTriangleGroups[i].scale = scale;
             this.animatingTriangleGroups[i].iteration++;
