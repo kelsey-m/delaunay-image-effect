@@ -83,15 +83,10 @@ class DelaunayImageEffect{
     reset(){
         var self = this;
         this.raster.onLoad = null;
-        //paper.project.activeLayer.removeChildren();
-        paper.project.clear();
-        paper.view.draw();
-        clearTimeout(this.resetTimeout);
+        paper.project.activeLayer.removeChildren();
 
-       this.resetTimeout = setTimeout(function(){
-            self.initVars();
-            self.loadNextImage();
-       }, 100);
+        this.initVars();
+        this.loadNextImage();
     }
 
     //--------------------------------- loadNextImage
@@ -105,6 +100,7 @@ class DelaunayImageEffect{
     loadImage(ind){
         this.raster = new paper.Raster(this.images[ind]);
         this.raster.onLoad = this.onImageLoaded.bind(this);
+        this.raster.visible = false;
     }
 
     //--------------------------------- onImageLoaded
@@ -143,6 +139,7 @@ class DelaunayImageEffect{
      //--------------------------------- createTrianglesByViewSize
     createTrianglesByViewSize(){
         this.setRasterToViewSize();
+        this.raster.visible = true;
 
         // create the delaunay triangles
         // by generating random points
