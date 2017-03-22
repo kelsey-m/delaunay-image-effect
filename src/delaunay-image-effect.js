@@ -79,6 +79,11 @@ class DelaunayImageEffect{
         paper.view.onFrame = this.onFrame.bind(this);
     }
 
+    //--------------------------------- redraw 
+    redraw(){
+        paper.view.update();
+    }
+
     //--------------------------------- reset
     reset(){
         var self = this;
@@ -245,6 +250,15 @@ class DelaunayImageEffect{
         //otherwise you will have triangles with etreme
         //dimensions as well as only a few triangles
         //along the etremities 
+
+        //top left corner
+        pts.push([0,0]);
+        //top right corner
+        pts.push([width,0]);
+        //bottom right corner
+        pts.push([width,height]);
+        //bottom left corner
+        pts.push([0,height]);
 
         //top edge
         for(i=0;i<20;i++){
