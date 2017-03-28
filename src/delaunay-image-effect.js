@@ -62,7 +62,8 @@ class DelaunayImageEffect{
         this.initVars();
 
         this.stage_element = stage_element;
-        if(this.stage_element) paper.setup(this.stage_element);
+        this.paperScope = new paper.PaperScope();
+        if(this.stage_element) this.paperScope.setup(this.stage_element);
     }
 
     //--------------------------------- init 
@@ -74,21 +75,21 @@ class DelaunayImageEffect{
         //begin to load the image(s)
         this.loadNextImage();
 
-        paper.view.onResize = this.onResize.bind(this);
-        if(!this.disableMouse) paper.view.onMouseMove = this.onMouseMove.bind(this);
-        paper.view.onFrame = this.onFrame.bind(this);
+        this.paperScope.view.onResize = this.onResize.bind(this);
+        if(!this.disableMouse) this.paperScope.view.onMouseMove = this.onMouseMove.bind(this);
+        this.paperScope.view.onFrame = this.onFrame.bind(this);
     }
 
     //--------------------------------- redraw 
     redraw(){
-        paper.view.update();
+        this.paperScope.view.update();
     }
 
     //--------------------------------- reset
     reset(){
         var self = this;
         this.raster.onLoad = null;
-        paper.project.activeLayer.removeChildren();
+        this.paperScope.project.activeLayer.removeChildren();
 
         this.initVars();
         this.loadNextImage();
@@ -103,7 +104,7 @@ class DelaunayImageEffect{
 
     //--------------------------------- loadImage
     loadImage(ind){
-        this.raster = new paper.Raster(this.images[ind]);
+        this.raster = new this.paperScope.Raster(this.images[ind]);
         this.raster.onLoad = this.onImageLoaded.bind(this);
         this.raster.visible = false;
     }
@@ -160,8 +161,8 @@ class DelaunayImageEffect{
 
     //--------------------------------- setRasterToViewSize
     setRasterToViewSize(){
-        this.raster.fitBounds(paper.view.bounds, true);
-        this.raster.position = paper.view.center;
+        this.raster.fitBounds(this.paperScope.view.bounds, true);
+        this.raster.position = this.paperScope.view.center;
         this.raster_width = this.raster.bounds.width;
         this.raster_height = this.raster.bounds.height;
     }
@@ -210,7 +211,7 @@ class DelaunayImageEffect{
 
             group.children[1].bounds.width = this.raster_width*scale;
             group.children[1].bounds.height = this.raster_height*scale;
-            group.children[1].position = paper.view.center;
+            group.children[1].position = this.paperScope.view.center;
             
             //if reached max_scale  
             //remove from array for now to test
@@ -226,8 +227,8 @@ class DelaunayImageEffect{
         // by generating random points
         // that spread accross the width 
         // of the stage
-        var pts = this.getRandomPoints( paper.view.bounds.width, 
-                                        paper.view.bounds.height );
+        var pts = this.getRandomPoints( this.paperScope.view.bounds.width, 
+                                        this.paperScope.view.bounds.height );
 
         this.generateTrianglesByPoints(pts);
     }
@@ -269,7 +270,7 @@ class DelaunayImageEffect{
         //bottom edge
         for(i=0;i<20;i++){
             pt_x = Math.round(Math.random()*width);
-            pt_y = paper.view.bounds.height;
+            pt_y = this.paperScope.view.bounds.height;
             pts.push([pt_x, pt_y]);
         }
         //left edge
@@ -280,7 +281,7 @@ class DelaunayImageEffect{
         }
         //right edge
         for(i=0;i<10;i++){
-            pt_x = paper.view.bounds.width;
+            pt_x = this.paperScope.view.bounds.width;
             pt_y = Math.round(Math.random()*height);
             pts.push([pt_x, pt_y]);
         }
@@ -310,11 +311,11 @@ class DelaunayImageEffect{
         //of each triangle by adding its
         //points to a Path
         for(var i=0;i<triangles.length;i++){
-            trianglePath = new paper.Path();
+            trianglePath = new this.paperScope.Path();
             triangle_pts = [
-                new paper.Point(pts[triangles[i][0]][0], pts[triangles[i][0]][1]),
-                new paper.Point(pts[triangles[i][1]][0], pts[triangles[i][1]][1]),
-                new paper.Point(pts[triangles[i][2]][0], pts[triangles[i][2]][1])
+                new this.paperScope.Point(pts[triangles[i][0]][0], pts[triangles[i][0]][1]),
+                new this.paperScope.Point(pts[triangles[i][1]][0], pts[triangles[i][1]][1]),
+                new this.paperScope.Point(pts[triangles[i][2]][0], pts[triangles[i][2]][1])
             ];
             trianglePath.segments = [];
             trianglePath.add(triangle_pts[0]);
@@ -356,10 +357,10 @@ class DelaunayImageEffect{
 
     //--------------------------------- createNewTriangleGroup
     createNewTriangleGroup(triangle, raster){
-        raster.position = paper.view.center;
-        raster.fitBounds(paper.view.bounds, true);
+        raster.position = this.paperScope.view.center;
+        raster.fitBounds(this.paperScope.view.bounds, true);
 
-        var group = new paper.Group([
+        var group = new this.paperScope.Group([
             triangle,
             raster
         ]);
