@@ -11,10 +11,16 @@
     "image",
     "effect",
     "bitmap",
-    "manipulation"
+    "manipulation",
+    "delaunay",
+    "triangles"
   ],
   "author": "Kelsey Motley <kelsey@shecodesthese.com>",
   "license": "MIT",
+  "repository" : { 
+    "type" : "git",
+    "url" : "https://github.com/kelseyvaughn/delaunay-image-effect"
+  },
   "peerDependencies": {
     "paper": "^0.10.2"
   },
