@@ -63,36 +63,65 @@ class DelaunayImageEffect{
 
         this.stage_element = stage_element;
         this.paperScope = new paper.PaperScope();
+        //need to activate to work ensure we 
+        //are working within the proper scope 
+        this.paperScope.activate();
         if(this.stage_element) this.paperScope.setup(this.stage_element);
     }
 
     //--------------------------------- init 
     init(onLoaded, disableMouse){
+        this.paperScope.activate();
         //set disableMouse to false by default
         this.disableMouse = !disableMouse ? false : true;
         //store on loaded callback
         this.onLoaded = onLoaded;
+        this.onLoaded();
+
+        this.setListeners();
+
         //begin to load the image(s)
         this.loadNextImage();
+    }
 
+    //--------------------------------- setListeners
+    setListeners(){
         this.paperScope.view.onResize = this.onResize.bind(this);
         if(!this.disableMouse) this.paperScope.view.onMouseMove = this.onMouseMove.bind(this);
         this.paperScope.view.onFrame = this.onFrame.bind(this);
     }
 
-    //--------------------------------- redraw 
-    redraw(){
-        this.paperScope.view.update();
+    //--------------------------------- clear
+    clear(){
+        if(this.raster) this.raster.onLoad = null;
+        this.paperScope.view.onResize = null;
+        this.paperScope.view.onFrame = null;
+        this.paperScope.view.onMouseMove = null;  
+
+        //keep the original raster here
+        //and remove all others
+        for(var i=0; i<this.triangleGroups.length; i++){
+            this.triangleGroups[i].group.removeChildren();
+            this.triangleGroups[i].group.remove();
+        }
+        //this.paperScope.project.activeLayer.removeChildren();
     }
 
     //--------------------------------- reset
     reset(){
-        var self = this;
-        this.raster.onLoad = null;
-        this.paperScope.project.activeLayer.removeChildren();
+        this.paperScope.activate();
+        this.clear();
+
+        this.setListeners();
 
         this.initVars();
-        this.loadNextImage();
+        //this.loadNextImage();
+        this.createTrianglesByViewSize();
+    }
+
+    //--------------------------------- redraw
+    redraw(){
+        this.reset();
     }
 
     //--------------------------------- loadNextImage
@@ -118,12 +147,13 @@ class DelaunayImageEffect{
 
     //--------------------------------- onResize
     onResize(event){
+        this.paperScope.activate();
         var self = this;
         clearTimeout(this.resizeTimeout);
         // set a timeout so that 
-        // resetting does not occur too rapidly
+        // redrawting does not occur too rapidly
         this.resizeTimeout = setTimeout(function(){
-            self.reset();
+            self.redraw();
         }, 500);
     }
 
