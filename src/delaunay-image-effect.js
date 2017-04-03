@@ -11,7 +11,7 @@ import paper from "paper";
     at different rates to create a fluid,
     3d-like effect
 
-    May add strokes and refine the effect in the future
+    May add strokes, add easing, and refine the effect in the future
 
     uses Delaunay Triangulation API
     here: https://github.com/mikolalysenko/delaunay-triangulate
@@ -104,7 +104,6 @@ class DelaunayImageEffect{
             this.triangleGroups[i].group.removeChildren();
             this.triangleGroups[i].group.remove();
         }
-        //this.paperScope.project.activeLayer.removeChildren();
     }
 
     //--------------------------------- reset
@@ -115,7 +114,6 @@ class DelaunayImageEffect{
         this.setListeners();
 
         this.initVars();
-        //this.loadNextImage();
         this.createTrianglesByViewSize();
     }
 
