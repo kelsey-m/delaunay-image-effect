@@ -76,7 +76,6 @@ class DelaunayImageEffect{
         this.disableMouse = !disableMouse ? false : true;
         //store on loaded callback
         this.onLoaded = onLoaded;
-        this.onLoaded();
 
         this.setListeners();
 
